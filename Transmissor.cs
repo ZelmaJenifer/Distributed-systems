@@ -29,6 +29,7 @@ class Transmissor
     /*
         This method creates a configuration reader object and
         setups the connection factory
+        file_path (string): the path of the file to read
     */
     public void Setup(string file_path)
     {
@@ -43,7 +44,8 @@ class Transmissor
     }
 
     /*
-        This method send messages to the RabbitMQ Server 
+        This method send messages to the RabbitMQ Server
+        message (byte): the message to send to
 
     */
     public void transmit(byte[] message)
@@ -67,6 +69,7 @@ class Transmissor
 
     /*
         This method is listening the responses from the server
+        
     */
     public byte[] listen_response()
     {
@@ -107,6 +110,7 @@ class Transmissor
 
     /*
         This method prepares the message
+        message (string): the message to be encoding
     */
     private static void PrepareMessage(string message)
     {
@@ -118,6 +122,7 @@ class Transmissor
 
     /*
       This method is listening the signals from the transceiver
+      tcp_client (TcpClient):the client to receive the messages from
     */
 
     public void ListenDevice(TcpClient tcp_client)
@@ -155,6 +160,11 @@ class Transmissor
 
     }
 
+    /*
+     *This method sends the data to a given device
+     *socket (Socket): a socket to send the message
+     *message (byte): the message to send
+     */
     public void SendDatatoDevice(Socket socket, byte[] message)
     {
 
@@ -185,7 +195,11 @@ class Transmissor
 
     }
 
-
+    /*
+     *This method create the connection with a client
+     *ip (string): the ip of the client
+     *port (int): the port through which the server will connect
+     */
     public void ConnectToDevice(string ip, int port)
     {
         TcpClient tcp_client;

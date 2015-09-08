@@ -16,7 +16,10 @@ class Receiver
     ConfigurationReader c_reader;
     private Conexion cnn;
 
-    //Construct and setup
+    /*
+     *Construct and setup
+     *file_path (string): the path of the file to read
+     */
     public Receiver(string file_path)
     {
         this.Setup(file_path);
@@ -26,6 +29,7 @@ class Receiver
     /*
         This method creates a configuration reader object and
         setups the connection factory
+        file_path (string): the path of the file to read
     */
     public void Setup(string file_path)
     {
@@ -98,7 +102,9 @@ class Receiver
     }
 
 
-    
+    /*
+     *This method sends the parameters for a connection
+     */
     private void SetDefaultConnectionString()
     {
             
@@ -116,6 +122,10 @@ class Receiver
 
      }
 
+     /*
+      *This method stores the retrieved data in to a database
+      *data (string): the data to be stored
+      */
     private void StoreData(string data)
     {
         
