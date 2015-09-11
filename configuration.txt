@@ -1,0 +1,5 @@
+user:test
+password:test
+server:localhost
+remote:localhost
+//10.13.4.65

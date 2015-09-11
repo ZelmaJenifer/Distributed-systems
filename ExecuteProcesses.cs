@@ -35,38 +35,38 @@ namespace ExecuteProcesses
             ProcessStartInfo startInfo = new ProcessStartInfo("C://Users/zelma/Documents/Visual Studio 2013/Projects/LASEC/TransceiverSimulation/TransceiverSimulation/bin/Debug/TransceiverSimulation.exe");
             startInfo.WindowStyle = ProcessWindowStyle.Minimized;
 
-            for (int i = 4000; i <= 4100; i++)
+            for (int i = 4001; i <= 4050; i++)
             {
                 string port= i.ToString();
                 startInfo.Arguments = port;
                 Process.Start(startInfo);
             }
         }
+        
         // Start the processes Transmissor. They can only be opened by passing them as arguments.
         void OpenWithStartInfo2()
         {
-            // The path that stores processes Transmissor
-            ProcessStartInfo startInfo = new ProcessStartInfo("C://Users/zelma/Documents/Visual Studio 2013/Projects/LASEC/Transmissor/Transmissor/bin/Debug/Transmissor.exe");
+             // The path that stores processes Transmissor
+            ProcessStartInfo startInfo = new ProcessStartInfo("C://Users/zelma/Documents/Visual Studio 2013/Projects/LASEC/Lectura y simulación de varios transceiver automáticamente/Transmissor/Transmissor/bin/Debug/Transmissor.exe");
             startInfo.WindowStyle = ProcessWindowStyle.Minimized;
 
-            
-            startInfo.WorkingDirectory = @"C://Users/zelma/Documents/Visual Studio 2013/Projects/LASEC/Transmissor/Transmissor/bin/Debug/";
-            for (int i = 115; i <= 118; i++)
-            {
-                string ip = i.ToString();
-                startInfo.Arguments = "192.168.1."+ip;
+            startInfo.WorkingDirectory = @"C://Users/zelma/Documents/Visual Studio 2013/Projects/LASEC/Lectura y simulación de varios transceiver automáticamente/Transmissor/Transmissor/bin/Debug/";
 
+            for (int i = 4001; i <= 4050; i++)
+            {
+                string port = i.ToString();
+                startInfo.Arguments = port;
                 Process.Start(startInfo);
             }
+
         }
 
         static void Main()
         {
+            ExecuteProcesses myProcess = new ExecuteProcesses();
+            myProcess.OpenWithStartInfo();
 
-            //ExecuteProcesses myProcess = new ExecuteProcesses();
-            //myProcess.OpenWithStartInfo();
-
-            ////Thread.Sleep(5000);
+            Thread.Sleep(5000);
 
             ExecuteProcesses myProcess2 = new ExecuteProcesses();
             //myProcess2.OpenWithArguments();

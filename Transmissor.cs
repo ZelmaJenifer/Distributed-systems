@@ -89,20 +89,14 @@ class Transmissor
 
                 Console.WriteLine(" [*] Waiting for logs." +
                                   "To exit press CTRL+C");
-
-                byte[] body_message;
                 while (true)
                 {
                     var event_args = (BasicDeliverEventArgs)consumer.Queue.Dequeue();
                     var body = event_args.Body;
-                    body_message = body;
                     var message = Encoding.UTF8.GetString(body);
-                    
-                    Console.WriteLine(" [x] {0}", message);
-                    return body_message;
-                }
 
-                
+                    Console.WriteLine(" [x] {0}", message);
+                }
             }
         }
 
@@ -127,26 +121,33 @@ class Transmissor
 
     public void ListenDevice(TcpClient tcp_client)
     {
-        //byte[] buffer = new byte[100];
+       byte[] buffer = new byte[100];
         try
             {
                 while (true)
                 {
-                        StreamReader leer = new StreamReader(tcp_client.GetStream());
+                    
+                    int received = 0;
 
-                        string s_received  = leer.ReadLine();
-                        
-                        if (s_received != "\0")
+                    while (received < buffer.Length)
+                    {
+                        //received = socket.Receive(buffer, 0 + received, 40, SocketFlags.None);
+                        received = socket.Receive(buffer);
+
+                        if (received != 0)
                         {
+                            
+                            string s_received = Encoding.ASCII.GetString(buffer);
 
+                            Console.Write("DATOS RECIBIDOS:");
                             Console.WriteLine(" >> " + s_received);
 
-                            PrepareMessage(s_received);
+                            PrepareMessage(buffer);
                             
 
                         }
                      
-                    
+                    }
                   
 
                 }
@@ -158,43 +159,10 @@ class Transmissor
             
             }
 
-    }
-
-    /*
-     *This method sends the data to a given device
-     *socket (Socket): a socket to send the message
-     *message (byte): the message to send
-     */
-    public void SendDatatoDevice(Socket socket, byte[] message)
-    {
-
-        while (true)
-        {
-            //Prender leds
-            //string str = "SDAT 1 000011DB9BF7 0B 08125554025500035B0C01 2000\r\n";
-            //Apagar leds
-            //string str = "SDAT 1 000011DB9BF7 0B 08125554025500035B0C00 2000\r\n";
-            
-            //string str = "SBIV 00100";
-            //string str = "GDAT";
-            //string str = "$%&/\r\n";
-            
-            
-            byte[] buffer = new byte[100];
-            //buffer = Encoding.ASCII.GetBytes(message);
-            buffer = message;
-            try
-            { // sends the text with timeout 10s
-                socket.Send(buffer);
-                var str = Encoding.UTF8.GetString(message);
-                Console.WriteLine("Enviado..."+ str);
-                Thread.Sleep(2000);
-            }
-            catch (Exception ex) { Console.WriteLine(ex.Message.ToString()); }
-        }
 
     }
 
+ 
     /*
      *This method create the connection with a client
      *ip (string): the ip of the client
@@ -202,27 +170,13 @@ class Transmissor
      */
     public void ConnectToDevice(string ip, int port)
     {
-        TcpClient tcp_client;
+       TcpClient tcp_client;
         Socket socket;
 
         tcp_client = new TcpClient(ip, port);
         socket = tcp_client.Client;
 
-     
-        Thread.Sleep(2000);
-
-        Thread t2 = new Thread(delegate()
-        {
-            ListenDevice(tcp_client);
-        });
-        t2.Start();
-
-
-        Thread t1 = new Thread(delegate()
-        {
-            SendDatatoDevice(socket, listen_response());
-        });
-        t1.Start();
+        ListenDevice(socket);
 
     }
 
@@ -235,32 +189,18 @@ class Transmissor
     public static void Main(string[] args)
     {
 
-        string ip_address = "";
-       
         int port_number = 0;
-        //port_number = Convert.ToInt32(args[0]);
-
-        try
-        {
-            ip_address = args[0];
-
-            port_number = Convert.ToInt32("4001");
-        }
-        catch (Exception error)
-        {
-            Console.WriteLine("Error: {0}", error.ToString());
-        }
-
+        port_number = Convert.ToInt32(args[0]);
 
 
         //Create a transmissor
         Transmissor transmissor = new Transmissor("configuration.txt");
 
         //This line is listening signals from the transceiver
-        transmissor.ConnectToDevice(ip_address, port_number);
+        transmissor.ConnectToDevice("localhost", port_number);
 
         //This line is listening responses from the server
-        //transmissor.listen_response();
+        transmissor.listen_response();
         
 
     }

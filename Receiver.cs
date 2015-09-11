@@ -84,17 +84,17 @@ class Receiver
 
                 Console.WriteLine(" [*] Waiting for logs." +
                                   " To exit press CTRL+C");
-                while ((DateTime.Now - date_ini).TotalMinutes < 2)
+
+                while (true)
                 {
                     var event_args = (BasicDeliverEventArgs)consumer.Queue.Dequeue();
                     var body = event_args.Body;
                     var message = Encoding.UTF8.GetString(body);
 
                     Console.WriteLine(" [x] {0}", message);
+                    //method to storage the message into the database
                     StoreData(message);
-                    //Va al método StoreData (guardar en la base de datos)
 
-                    //this.send_response(); Sí lo recibí
                 }
             }
         }
@@ -196,13 +196,6 @@ class Receiver
     private static byte[] MessageResponse()
     {
 
-        //Prender leds del 9BF7
-        //va message = "SDAT 1 000011DB9BF7 0B 08125554025500035B0C01 2000\r\n";
-        //Apagar leds del 9BF7
-        //var massage = "SDAT 1 000011DB9BF7 0B 08125554025500035B0C00 2000\r\n";
-        //Prende leds del B7B0 *NO PRENDEN SUS LEDS (el 9BF7 no ve al B7B0)*
-        //var message = "SDAT 1 0000112DB7B0 0B 08125554025500035B0C01 2000\r\n";
-
         var message = "SDAT 1 000011DB9BF7 0B 08125554025500035B0C00 2000\r\n";
 
         var body = Encoding.UTF8.GetBytes(message);
@@ -225,16 +218,10 @@ class Receiver
         });
         t1.Start();
 
-        //Thread.Sleep(8000);
-
         Thread t2 = new Thread(delegate()
         {
             receiver.send_response();
         });
-        //t2.Start();
-
-
-
 
     }
 
